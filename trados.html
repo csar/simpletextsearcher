@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Translation memory</title>
+    <script type="text/javascript">
+        var keys = ["Haus", "Maus", "Laus", "Laut"]
+        var value = ["House", "Mouse", "Lice", "Sound"]
+
+        function random() {
+            var out = ""
+            while (out.length < 20) {
+                out += String.fromCharCode(Math.floor(Math.random() * 26 + 65))
+            }
+            return out
+        }
+
+        for (var i = 4; i < 500000; i++) {
+            keys[i] = random()
+            value[i] = random()
+        }
+    </script>
+    <script type="text/javascript">
+        function lookup() {
+            var str = document.getElementById("search").value
+            console.log("ping" + str)
+            var hits = document.getElementById("hits")
+            while (hits.firstChild) {
+                hits.removeChild(hits.firstChild)
+            }
+            var matcher = new RegExp(str, "i")
+            var hitCount = 0
+            for (var index = 0; index < keys.length; index++) {
+                var matchText = keys[index]
+                var matches = matchText.match(matcher)
+                if (matches) {
+                    var li = document.createElement("div")
+                    li.setAttribute("class", "wrap")
+                    var keySpan = document.createElement("div")
+                    keySpan.setAttribute("class", "left_col")
+                    var valueSpan = document.createElement("div")
+                    valueSpan.setAttribute("class", "right_col")
+
+
+                    var mi = 0
+                    keySpan.append(document.createTextNode(matchText.substring(mi, matches.index)))
+                    var bold = document.createElement("span")
+                    bold.setAttribute("class", "matched")
+                    bold.appendChild(document.createTextNode(matches[0]))
+                    keySpan.appendChild(bold)
+                    mi = matches.index + matches[0].length
+
+                    keySpan.appendChild(document.createTextNode(matchText.substring(mi)))
+
+                    var text = document.createTextNode(value[index])
+                    valueSpan.appendChild(text)
+                    li.appendChild(keySpan)
+                    li.appendChild(valueSpan)
+
+                    hits.appendChild(li)
+                    hitCount += 1
+                    if (hitCount > 20) {
+                        var h4 = document.createElement("h4")
+                        h4.appendChild(document.createTextNode("Addional results skipped ... (" + 100.0 * index / keys.length + "% scanned)"))
+                        hits.appendChild(h4)
+                        break
+                    }
+
+                }
+            }
+
+        }
+    </script>
+    <style type="text/css">
+        .wrap {
+            width: 100%;
+            margin: 0 auto;
+            display: table;
+        }
+        
+        .left_col {
+            float: left;
+            width: 50%;
+        }
+        
+        .right_col {
+            float: right;
+            width: 50%;
+        }
+        
+        .matched {
+            color: RED
+        }
+    </style>
+</head>
+
+<body>
+
+    <input id="search" type="text" name="search" value="" placeholder="Search here..." oninput="lookup()">
+
+    <div>
+        <h3>Hits</h3>
+        <div id="hits">
+        </div>
+</body>
+
+</html>

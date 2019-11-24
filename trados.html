@@ -23,52 +23,56 @@
     <script type="text/javascript">
         function lookup() {
             var str = document.getElementById("search").value
-            console.log("ping" + str)
-            var hits = document.getElementById("hits")
-            while (hits.firstChild) {
-                hits.removeChild(hits.firstChild)
-            }
-            var matcher = new RegExp(str, "i")
-            var hitCount = 0
-            for (var index = 0; index < keys.length; index++) {
-                var matchText = keys[index]
-                var matches = matchText.match(matcher)
-                if (matches) {
-                    var li = document.createElement("div")
-                    li.setAttribute("class", "wrap")
-                    var keySpan = document.createElement("div")
-                    keySpan.setAttribute("class", "left_col")
-                    var valueSpan = document.createElement("div")
-                    valueSpan.setAttribute("class", "right_col")
+            try {
+                var matcher = new RegExp(str, "i")
 
-
-                    var mi = 0
-                    keySpan.append(document.createTextNode(matchText.substring(mi, matches.index)))
-                    var bold = document.createElement("span")
-                    bold.setAttribute("class", "matched")
-                    bold.appendChild(document.createTextNode(matches[0]))
-                    keySpan.appendChild(bold)
-                    mi = matches.index + matches[0].length
-
-                    keySpan.appendChild(document.createTextNode(matchText.substring(mi)))
-
-                    var text = document.createTextNode(value[index])
-                    valueSpan.appendChild(text)
-                    li.appendChild(keySpan)
-                    li.appendChild(valueSpan)
-
-                    hits.appendChild(li)
-                    hitCount += 1
-                    if (hitCount > 20) {
-                        var h4 = document.createElement("h4")
-                        h4.appendChild(document.createTextNode("Addional results skipped ... (" + 100.0 * index / keys.length + "% scanned)"))
-                        hits.appendChild(h4)
-                        break
-                    }
-
+                var hits = document.getElementById("hits")
+                while (hits.firstChild) {
+                    hits.removeChild(hits.firstChild)
                 }
-            }
 
+                var hitCount = 0
+                for (var index = 0; index < keys.length; index++) {
+                    var matchText = keys[index]
+                    var matches = matchText.match(matcher)
+                    if (matches) {
+                        var li = document.createElement("div")
+                        li.setAttribute("class", "wrap")
+                        var keySpan = document.createElement("div")
+                        keySpan.setAttribute("class", "left_col")
+                        var valueSpan = document.createElement("div")
+                        valueSpan.setAttribute("class", "right_col")
+
+
+                        var mi = 0
+                        keySpan.append(document.createTextNode(matchText.substring(mi, matches.index)))
+                        var bold = document.createElement("span")
+                        bold.setAttribute("class", "matched")
+                        bold.appendChild(document.createTextNode(matches[0]))
+                        keySpan.appendChild(bold)
+                        mi = matches.index + matches[0].length
+
+                        keySpan.appendChild(document.createTextNode(matchText.substring(mi)))
+
+                        var text = document.createTextNode(value[index])
+                        valueSpan.appendChild(text)
+                        li.appendChild(keySpan)
+                        li.appendChild(valueSpan)
+
+                        hits.appendChild(li)
+                        hitCount += 1
+                        if (hitCount > 20 && keys.length / i < 90) {
+                            var h4 = document.createElement("h4")
+                            h4.appendChild(document.createTextNode("Addional results skipped ... (" + 100.0 * index / keys.length + "% scanned)"))
+                            hits.appendChild(h4)
+                            break
+                        }
+
+                    }
+                }
+            } catch (e) {
+
+            }
         }
     </script>
     <style type="text/css">
